@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Resume Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+</head>
+<body>
+  <div class="chat-wrapper">
+    <header>
+      <h1>Personal Assistant</h1>
+    </header>
+
+    <div class="job-desc">
+      <textarea id="job-description" placeholder="Feel free to paste the job description or any other relevant information you'd like me to consider (optional)..." rows="3"></textarea>
+    </div>
+
+    <main id="chat-box" class="chat-box"></main>
+
+    <div id="loading-indicator" class="loading-indicator" style="display: none;">
+      <div class="dot-flashing"></div>
+      <span>AI is typing...</span>
+    </div>
+
+    <footer class="chat-input">
+      <input type="text" id="user-input" placeholder="Feel free to ask anything – I'm here to help!" autocomplete="off">
+      <button onclick="sendMessage()">Send</button>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const chatBox = document.getElementById('chat-box');
+    const inputField = document.getElementById('user-input');
+    const jobDescriptionField = document.getElementById('job-description');
+    const loading = document.getElementById('loading-indicator');
+    const resumeData = localStorage.getItem('resumeData');
+    let chatHistory = [];
+
+    async function sendMessage() {
+      const message = inputField.value.trim();
+      const jobDescription = jobDescriptionField.value.trim();
+      if (!message) return;
+
+      appendMessage('You', message, 'user');
+      chatHistory.push({ role: 'user', content: message });
+      inputField.value = '';
+      loading.style.display = 'flex';
+
+      const response = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: chatHistory,
+          resume_data: resumeData,
+          job_description: jobDescription || null
+        })
+      });
+
+      const data = await response.json();
+      loading.style.display = 'none';
+      appendMessage('AI', data.reply, 'ai');
+      chatHistory.push({ role: 'assistant', content: data.reply });
+    }
+
+    function appendMessage(sender, message, cls) {
+      const msg = document.createElement('div');
+      msg.className = `message ${cls}`;
+      msg.innerHTML = `
+        <div class="msg-header">
+          <div class="avatar ${cls}"></div>
+          <strong>${sender}</strong>
+          ${cls === 'ai' ? `<button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>` : ''}
+        </div>
+        <div class="msg-body">${cls === 'ai' ? marked.parse(message) : message}</div>
+      `;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function copyToClipboard(btn) {
+      const content = btn.parentElement.nextElementSibling.innerText;
+      navigator.clipboard.writeText(content).then(() => {
+        btn.innerText = "Copied!";
+        setTimeout(() => (btn.innerText = "Copy"), 1500);
+      });
+    }
+
+    inputField.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>

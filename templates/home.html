@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ResumePro AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_home.css') }}">
+  <meta name="description" content="ResumePro AI – AI-powered resume assistant to generate cover letters, tailor responses, and store resumes locally.">
+<meta property="og:title" content="ResumePro AI">
+<meta property="og:description" content="Smarter Job Applications Start Here with AI-powered tools.">
+<meta property="og:image" content="{{ url_for('static', filename='images/ai_resume_assist.svg') }}">
+<meta name="twitter:card" content="summary_large_image">
+
+</head>
+<body>
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>ResumePro AI</h1>
+      <p class="tagline">Smarter Job Applications Start Here</p>
+      <p class="description">
+        Upload once. Interact forever. Our AI-powered assistant helps you generate cover letters,
+        answer job-specific questions, and tailor your resume — all without re-uploading.
+      </p>
+      <div class="button-group">
+        <a href="/update" class="btn">Add/Modify Resume</a>
+        <a href="/ai" class="btn secondary">Use AI Assistant</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="{{ url_for('static', filename='images/ai_resume_assist.svg') }}" alt="AI Assistant Illustration">
+    </div>
+  </div>
+
+  <section class="features">
+    <h2>Key Features</h2>
+    <div class="feature-list">
+      <div class="feature">
+        <h3>Persistent Resume Storage</h3>
+        <p>Your resume stays saved locally — no need to upload again for future interactions.</p>
+      </div>
+      <div class="feature">
+        <h3>Job Description Support</h3>
+        <p>Paste a job description and let the assistant tailor your responses.</p>
+      </div>
+      <div class="feature">
+        <h3>Strong AI Support</h3>
+        <p>All responses use an industry standard model for the best results</p>
+      </div>
+      <div class="feature">
+        <h3>Instant Cover Letters</h3>
+        <p>Generate job-specific cover letters on the fly using your saved data.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built for job seekers who want smarter tools. 2025 © ResumePro AI</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Your Resume | ResumePro AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_upload.css') }}">
+</head>
+<body>
+  <div class="upload-wrapper">
+    <div class="upload-container">
+      <h1>Upload Your Resume</h1>
+      <p class="intro">
+        Start your journey toward smarter job applications. Upload your resume once — ResumePro AI will parse, store, and remember it for future use.
+      </p>
+
+      <form method="POST" enctype="multipart/form-data" onsubmit="clearLocalStorage()">
+        <label for="resume" class="file-label">Choose your resume file (PDF or DOCX)</label>
+        <input type="file" name="resume" id="resume" required>
+        <button type="submit" class="btn upload">Upload & Parse Resume</button>
+      </form>
+
+      <div class="divider">or</div>
+
+      <div class="saved-resume-section">
+        <h2>Edit Previously Uploaded Resume</h2>
+        <p class="info">
+          Already uploaded your resume before? Great! You can directly edit or update your stored data without re-uploading.
+        </p>
+        <button onclick="loadResumeData()" class="btn load">Load Saved Resume Data</button>
+      </div>
+    </div>
+
+    <footer>
+      <p>2025 &copy; ResumePro AI – Privacy-first, AI-powered job prep for modern professionals.</p>
+    </footer>
+  </div>
+
+  <script>
+    function clearLocalStorage() {
+      localStorage.removeItem('resumeData');
+      console.log("Cleared resumeData from localStorage.");
+    }
+
+    function loadResumeData() {
+      const resumeData = localStorage.getItem('resumeData');
+      if (!resumeData) {
+        alert("No existing resume data found.");
+        return;
+      }
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/result";
+
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.name = "parsed_resume_data";
+      hiddenInput.value = encodeURIComponent(resumeData);
+
+      form.appendChild(hiddenInput);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  </script>
+</body>
+</html>

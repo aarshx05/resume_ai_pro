@@ -1,0 +1,176 @@
+/* Base styles */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f6fa;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 2.5rem;
+  color: #0077b6;
+}
+
+/* Form container */
+form#resume-form {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+/* Sections */
+.section {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 20px rgba(0, 119, 182, 0.08);
+  box-sizing: border-box;
+}
+
+.section h2 {
+  font-size: 1.4rem;
+  color: #0077b6;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e0e6ed;
+  padding-bottom: 10px;
+}
+
+/* Labels and textareas */
+label {
+  display: block;
+  font-weight: 600;
+  margin: 12px 0 5px;
+  color: #555;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border 0.3s ease;
+  box-sizing: border-box;
+}
+
+textarea:focus {
+  border-color: #00b4d8;
+  outline: none;
+}
+
+/* Entries */
+.entry-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.entry {
+  position: relative;
+  background-color: #f9fbfd;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 10px rgba(0, 119, 182, 0.06);
+  box-sizing: border-box;
+}
+
+/* Delete button */
+.delete-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #e63946;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.delete-btn:hover {
+  background-color: #c92a3b;
+}
+
+/* Section Add Button - aligned right */
+.section .add-btn {
+  display: block;
+  margin: 20px 0 0 auto;
+  background-color: #0077b6;
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.section .add-btn:hover {
+  background-color: #005f8e;
+}
+
+/* Global Save Button - centered */
+#resume-form > .add-btn:last-of-type {
+  display: block;
+  margin: 50px auto 0;
+  background-color: #00b4d8;
+  color: #fff;
+  padding: 14px 28px;
+  font-size: 1.05rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#resume-form > .add-btn:last-of-type:hover {
+  background-color: #009bb3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  form#resume-form {
+    padding: 20px;
+  }
+
+  .section {
+    padding: 16px;
+  }
+
+  textarea {
+    font-size: 0.95rem;
+  }
+
+  .delete-btn {
+    font-size: 0.75rem;
+    padding: 5px 8px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .section h2 {
+    font-size: 1.2rem;
+  }
+
+  .section .add-btn,
+  #resume-form > .add-btn:last-of-type {
+    width: 100%;
+  }
+}

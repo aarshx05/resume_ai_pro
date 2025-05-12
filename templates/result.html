@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parsed Resume</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_chat.css') }}">
+  <style>
+    .entry {
+      margin-bottom: 1em;
+      padding: 0.5em;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .delete-btn, .add-btn {
+      margin: 0.5em 0;
+      padding: 0.3em 0.6em;
+    }
+  </style>
+</head>
+<body>
+<h1>Your Resume</h1>
+
+
+<form id="resume-form">
+  {% if data %}
+    {% for section, content in data.items() %}
+      <div class="section" id="{{ section | replace(' ', '_') }}" data-section="{{ section }}">
+        <h2>{{ section }}</h2>
+
+        {% if content is string %}
+          <label>{{ section }}</label>
+          <textarea rows="4">{{ content }}</textarea>
+
+        {% elif content is mapping %}
+          {% for key, value in content.items() %}
+            <label>{{ key }}</label>
+            <textarea rows="2">{{ value }}</textarea>
+          {% endfor %}
+
+        {% elif content is iterable %}
+          <div class="entry-container" id="{{ section | replace(' ', '_') }}_container">
+            {% for item in content %}
+              <div class="entry">
+                <button type="button" class="delete-btn" onclick="deleteEntry(this)">Delete</button>
+                {% if item is string %}
+                  <textarea rows="2">{{ item }}</textarea>
+                {% elif item is mapping %}
+                  {% for k, v in item.items() %}
+                    <label>{{ k }}</label>
+                    <textarea rows="2">{{ v }}</textarea>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            {% endfor %}
+
+            <!-- Hidden template for adding new entries -->
+<!-- Hidden template for adding new entries -->
+<div class="entry entry-template" style="display: none;">
+  <button type="button" class="delete-btn" onclick="deleteEntry(this)">Delete</button>
+  {% if content and content[0] is string %}
+    <textarea rows="2"></textarea>
+  {% elif content and content[0] is mapping %}
+    {% for k in content[0].keys() %}
+      <label>{{ k }}</label>
+      <textarea rows="2"></textarea>
+    {% endfor %}
+  {% else %}
+    <!-- Fallback for empty content -->
+    <textarea rows="2"></textarea>
+  {% endif %}
+</div>
+
+          </div>
+          <button type="button" class="add-btn" onclick="addEntry('{{ section | replace(' ', '_') }}')">Add {{ section }}</button>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No resume data available.</p>
+  {% endif %}
+  <button type="button" class="add-btn" onclick="saveToLocalStorage()">Save</button>
+</form>
+
+<script>
+  // Delete entry
+  function deleteEntry(button) {
+    button.closest('.entry').remove();
+  }
+
+  // Add new entry dynamically
+  function addEntry(sectionId) {
+    const container = document.getElementById(sectionId + "_container");
+    const template = container.querySelector(".entry-template");
+    if (!template) return;
+
+    const clone = template.cloneNode(true);
+    clone.classList.remove("entry-template");
+    clone.style.display = "block";
+
+    // Clear textarea values
+    clone.querySelectorAll("textarea").forEach(t => t.value = "");
+    container.appendChild(clone);
+  }
+
+  // Save form data to localStorage
+  function saveToLocalStorage() {
+    let resumeData = {};
+    const sections = document.querySelectorAll('.section');
+
+    sections.forEach(section => {
+      const sectionName = section.dataset.section;
+      const container = section.querySelector(".entry-container");
+
+      if (container) {
+        const entryValues = [];
+        container.querySelectorAll(".entry").forEach(entry => {
+          if (entry.classList.contains("entry-template")) return;
+
+          const labels = entry.querySelectorAll("label");
+          const textareas = entry.querySelectorAll("textarea");
+
+          if (labels.length === 0) {
+            entryValues.push(textareas[0].value.trim());
+          } else {
+            let obj = {};
+            labels.forEach((label, i) => {
+              const key = label.innerText.trim();
+              const val = textareas[i]?.value.trim();
+              obj[key] = val;
+            });
+            entryValues.push(obj);
+          }
+        });
+        resumeData[sectionName] = entryValues;
+      } else {
+        const textareas = section.querySelectorAll('textarea');
+        if (textareas.length === 1) {
+          resumeData[sectionName] = textareas[0].value.trim();
+        } else {
+          let values = {};
+          const labels = section.querySelectorAll('label');
+          textareas.forEach((ta, i) => {
+            const label = labels[i]?.innerText;
+            values[label || `field${i}`] = ta.value.trim();
+          });
+          resumeData[sectionName] = values;
+        }
+      }
+    });
+
+    localStorage.setItem("resumeData", JSON.stringify(resumeData));
+    alert("Resume saved to localStorage!");
+  }
+
+  // Load form data from localStorage
+  function loadFromLocalStorage() {
+    const saved = localStorage.getItem("resumeData");
+    if (!saved) return;
+
+    const data = JSON.parse(saved);
+
+    Object.entries(data).forEach(([sectionName, content]) => {
+      const sectionId = sectionName.replace(/ /g, "_");
+      const section = document.getElementById(sectionId);
+      if (!section) return;
+
+      if (typeof content === "string") {
+        const textarea = section.querySelector("textarea");
+        if (textarea) textarea.value = content;
+      } else if (Array.isArray(content)) {
+        const container = section.querySelector(".entry-container");
+        if (container) {
+          container.querySelectorAll(".entry:not(.entry-template)").forEach(e => e.remove());
+          content.forEach(value => {
+            const template = container.querySelector(".entry-template");
+            const clone = template.cloneNode(true);
+            clone.classList.remove("entry-template");
+            clone.style.display = "block";
+
+            if (typeof value === "string") {
+              clone.querySelector("textarea").value = value;
+            } else if (typeof value === "object") {
+              const labels = clone.querySelectorAll("label");
+              const textareas = clone.querySelectorAll("textarea");
+              labels.forEach((label, i) => {
+                const key = label.innerText.trim();
+                textareas[i].value = value[key] || "";
+              });
+            }
+
+            container.appendChild(clone);
+          });
+        }
+      } else if (typeof content === "object") {
+        const labels = section.querySelectorAll("label");
+        const textareas = section.querySelectorAll("textarea");
+        labels.forEach((label, i) => {
+          const key = label.innerText;
+          if (textareas[i]) {
+            textareas[i].value = content[key] || "";
+          }
+        });
+      }
+    });
+  }
+
+  window.onload = loadFromLocalStorage;
+</script>
+</body>
+</html>

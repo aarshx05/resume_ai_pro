@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from pdfminer.high_level import extract_text
 import docx2txt
 import urllib.parse
-
+from dotenv import load_dotenv
 from itertools import cycle
 from threading import Lock
 

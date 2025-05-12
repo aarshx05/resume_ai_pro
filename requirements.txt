@@ -4,3 +4,4 @@ pycryptodome==3.21.0
 pynput==1.7.7
 scapy==2.6.1
 six==1.16.0
+requests

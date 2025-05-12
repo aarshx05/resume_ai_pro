@@ -72,7 +72,7 @@ def parse_with_openrouter(text):
         "Authorization": f"Bearer {get_next_api_key()}",
 
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost:5000",
+        
         "X-Title": "ResumeParserApp"
     }
     
@@ -187,7 +187,7 @@ def chat():
       "Authorization": f"Bearer {get_next_api_key()}",
 
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost:5000",
+       
         "X-Title": "ResumeChatAssistant"
     }
 

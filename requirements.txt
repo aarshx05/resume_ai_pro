@@ -2,3 +2,4 @@ Flask==2.3.2
 requests==2.31.0
 pdfminer.six==20201018
 docx2txt==0.8
+dotenv

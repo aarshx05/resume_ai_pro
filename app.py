@@ -17,20 +17,19 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # OpenRouter API setup
 #API_KEY = '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'
-API_KEY = os.getenv('OPENROUTER_API_KEY')
+#API_KEY = os.getenv('OPENROUTER_API_KEY')
 
 # List of API keys
 API_KEYS = [
-        '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',
-    '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',
-    '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',
-    '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',
-    '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',
-    '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',
-    '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',
-    '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',
-    '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'
-
+    os.getenv('API_KEY_1'),
+    os.getenv('API_KEY_2'),
+    os.getenv('API_KEY_3'),
+    os.getenv('API_KEY_4'),
+    os.getenv('API_KEY_5'),
+    os.getenv('API_KEY_6'),
+    os.getenv('API_KEY_7'),
+    os.getenv('API_KEY_8'),
+    os.getenv('API_KEY_9')
 ]
 
 # Create a thread-safe cycle
@@ -184,7 +183,7 @@ def chat():
 
     # Prepare headers for the OpenRouter API
     headers = {
-      "Authorization": f"Bearer {API_KEY}",
+      "Authorization": f"Bearer {get_next_api_key()}",
 
         "Content-Type": "application/json",
         

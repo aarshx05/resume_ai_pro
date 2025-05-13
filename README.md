@@ -1,7 +1,7 @@
 ResumePro AI 🧠📄
 Smarter Job Applications with AI
 
-ResumePro AI is a Flask-based web application that helps job seekers enhance their resume process using AI. It allows users to upload and parse resumes, edit structured resume sections, and generate tailored cover letters or job responses using AI models.
+ResumePro AI is a web application that helps job seekers enhance their resume process using AI. It allows users to upload and parse resumes, edit structured resume sections, and generate tailored cover letters or job responses using AI models.
 
 🔗 Live Demo: https://resume-ai-pro.onrender.com/
 

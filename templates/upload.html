@@ -4,38 +4,57 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Upload Your Resume | ResumePro AI</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_upload.css') }}">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="upload-wrapper">
-    <div class="upload-container">
-      <h1>Upload Your Resume</h1>
-      <p class="intro">
-        Start your journey toward smarter job applications. Upload your resume once — ResumePro AI will parse, store, and remember it for future use.
-      </p>
 
-      <form method="POST" enctype="multipart/form-data" onsubmit="clearLocalStorage()">
-        <label for="resume" class="file-label">Choose your resume file (PDF or DOCX)</label>
-        <input type="file" name="resume" id="resume" required>
-        <button type="submit" class="btn upload">Upload & Parse Resume</button>
-      </form>
+<body class="bg-white text-gray-900 min-h-screen flex flex-col">
 
-      <div class="divider">or</div>
+  <!-- Hero Section -->
+  <section class="hero-section flex-grow flex flex-col items-center justify-center text-center py-16 px-4 space-y-8">
+    <h1 class="text-4xl font-extrabold sm:text-5xl text-gray-800">Upload Your Resume</h1>
+    <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
+      Seamlessly upload your resume once, and let ResumePro AI take care of the rest. It will parse, store, and remember it for all future job applications.
+    </p>
 
-      <div class="saved-resume-section">
-        <h2>Edit Previously Uploaded Resume</h2>
-        <p class="info">
-          Already uploaded your resume before? Great! You can directly edit or update your stored data without re-uploading.
-        </p>
-        <button onclick="loadResumeData()" class="btn load">Load Saved Resume Data</button>
+    <form method="POST" enctype="multipart/form-data" onsubmit="clearLocalStorage()" class="w-full sm:w-96 bg-white p-8 rounded-lg shadow-xl space-y-6 border border-gray-300">
+      <div class="space-y-4">
+        <label for="resume" class="block text-xl font-medium text-gray-700">Choose your resume file (PDF or DOCX)</label>
+        <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx"
+               class="w-full p-4 border-2 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out" required>
       </div>
+
+      <!-- Upload Button -->
+      <button type="submit" 
+              class="w-full bg-gradient-to-r from-blue-400 to-indigo-600 text-white py-4 rounded-lg font-semibold transform hover:scale-105 transition duration-300 shadow-md hover:bg-gradient-to-l">
+        Upload & Parse Resume
+      </button>
+    </form>
+
+    <div class="divider my-8 text-gray-600">or</div>
+
+    <!-- Load Saved Resume Section -->
+    <div class="text-center space-y-4">
+      <h2 class="text-2xl font-semibold text-gray-800">Edit Previously Uploaded Resume</h2>
+      <p class="text-lg text-gray-600">
+        Already uploaded your resume? Great! You can directly load it and edit or update your data without re-uploading.
+      </p>
+      <button onclick="loadResumeData()"
+              class="w-full bg-gradient-to-r from-teal-400 to-blue-600 text-white py-4 rounded-lg font-semibold transform hover:scale-105 transition duration-300 shadow-md hover:bg-gradient-to-l">
+        Load Saved Resume Data
+      </button>
     </div>
+  </section>
 
-    <footer>
-      <p>2025 &copy; ResumePro AI – Privacy-first, AI-powered job prep for modern professionals.</p>
-    </footer>
-  </div>
+  <!-- Footer Section -->
+  <footer class="bg-gray-100 text-gray-800 py-4 mt-auto">
+    <div class="text-center">
+      <p class="text-sm sm:text-base">2025 &copy; ResumePro AI – Privacy-first, AI-powered job prep for modern professionals.</p>
+    </div>
+  </footer>
 
+  <!-- Scripts -->
   <script>
     function clearLocalStorage() {
       localStorage.removeItem('resumeData');

@@ -4,57 +4,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ResumePro AI</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_home.css') }}">
-  <meta name="description" content="ResumePro AI – AI-powered resume assistant to generate cover letters, tailor responses, and store resumes locally.">
-<meta property="og:title" content="ResumePro AI">
-<meta property="og:description" content="Smarter Job Applications Start Here with AI-powered tools.">
-<meta property="og:image" content="{{ url_for('static', filename='images/ai_resume_assist.svg') }}">
-<meta name="twitter:card" content="summary_large_image">
 
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="ResumePro AI – AI-powered resume assistant to generate cover letters, tailor responses, and store resumes locally.">
+  <meta property="og:title" content="ResumePro AI">
+  <meta property="og:description" content="Smarter Job Applications Start Here with AI-powered tools.">
+  <meta property="og:image" content="{{ url_for('static', filename='images/ai_resume_assist.svg') }}">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
-<body>
-  <div class="hero-section">
-    <div class="hero-content">
-      <h1>ResumePro AI</h1>
-      <p class="tagline">Smarter Job Applications Start Here</p>
-      <p class="description">
+
+<body class="bg-gradient-to-br from-indigo-50 via-white to-blue-100 text-gray-800">
+
+  <!-- Hero Section -->
+  <section class="min-h-screen flex flex-col-reverse lg:flex-row items-center justify-between px-6 lg:px-24 py-12">
+    <!-- Text Content -->
+    <div class="max-w-xl text-center lg:text-left space-y-6">
+      <h1 class="text-5xl font-extrabold text-indigo-600">ResumePro AI</h1>
+      <p class="text-xl text-gray-700 font-medium">Smarter Job Applications Start Here</p>
+      <p class="text-base text-gray-600">
         Upload once. Interact forever. Our AI-powered assistant helps you generate cover letters,
         answer job-specific questions, and tailor your resume — all without re-uploading.
       </p>
-      <div class="button-group">
-        <a href="/update" class="btn">Add/Modify Resume</a>
-        <a href="/ai" class="btn secondary">Use AI Assistant</a>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+        <a href="/update" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition">
+          Add/Modify Resume
+        </a>
+        <a href="/ai" class="bg-white border border-indigo-500 hover:bg-indigo-100 text-indigo-600 font-semibold px-6 py-3 rounded-lg shadow-md transition">
+          Use AI Assistant
+        </a>
       </div>
     </div>
-    <div class="hero-image">
-      <img src="{{ url_for('static', filename='images/ai_resume_assist.svg') }}" alt="AI Assistant Illustration">
-    </div>
-  </div>
 
-  <section class="features">
-    <h2>Key Features</h2>
-    <div class="feature-list">
-      <div class="feature">
-        <h3>Persistent Resume Storage</h3>
+    <!-- Hero Image -->
+    <div class="w-full max-w-lg mb-10 lg:mb-0">
+      <img src="{{ url_for('static', filename='images/ai_resume_assist.svg') }}" alt="AI Assistant Illustration" class="w-full">
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 px-6 lg:px-24 bg-white text-gray-800">
+    <h2 class="text-3xl font-bold text-center mb-12">Key Features</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="bg-gradient-to-r from-indigo-100 to-purple-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">Persistent Resume Storage</h3>
         <p>Your resume stays saved locally — no need to upload again for future interactions.</p>
       </div>
-      <div class="feature">
-        <h3>Job Description Support</h3>
+      <div class="bg-gradient-to-r from-yellow-100 to-orange-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">Job Description Support</h3>
         <p>Paste a job description and let the assistant tailor your responses.</p>
       </div>
-      <div class="feature">
-        <h3>Strong AI Support</h3>
-        <p>All responses use an industry standard model for the best results</p>
+      <div class="bg-gradient-to-r from-green-100 to-teal-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">Strong AI Support</h3>
+        <p>All responses use an industry-standard model for the best results.</p>
       </div>
-      <div class="feature">
-        <h3>Instant Cover Letters</h3>
+      <div class="bg-gradient-to-r from-pink-100 to-red-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold mb-2">Instant Cover Letters</h3>
         <p>Generate job-specific cover letters on the fly using your saved data.</p>
       </div>
     </div>
   </section>
 
-  <footer>
+  <!-- Footer -->
+  <footer class="mt-16 p-6 text-center text-sm text-gray-500 border-t border-gray-200 bg-white">
     <p>Built for job seekers who want smarter tools. 2025 © ResumePro AI</p>
   </footer>
+
 </body>
 </html>

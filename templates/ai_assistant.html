@@ -4,49 +4,78 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AI Resume Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
 </head>
-<body>
-  <div class="chat-wrapper">
-    <header>
-      <h1>Personal Assistant</h1>
+<body class="bg-gray-50 font-sans h-screen">
+
+  <!-- Full Page Wrapper -->
+  <div class="flex flex-col h-screen w-full">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-4 sm:px-6 py-4 shadow-md flex justify-between items-center">
+      <h1 class="text-xl sm:text-2xl font-bold">AI Resume Assistant</h1>
+      <nav class="text-sm sm:text-base">
+        <a href="{{ url_for('index') }}" class="hover:underline">Home</a>
+        <a href="/update" class="ml-4 hover:underline">Edit Resume</a>
+      </nav>
     </header>
 
-    <div class="job-desc">
-      <textarea id="job-description" placeholder="Feel free to paste the job description or any other relevant information you'd like me to consider (optional)..." rows="3"></textarea>
+    <!-- Job Description Box -->
+    <section class="bg-white p-4 sm:p-6 border-b border-gray-200">
+      <label for="job-description" class="block font-medium mb-2 text-gray-700">Paste Job Description:</label>
+      <textarea id="job-description" placeholder="Paste the job description here..." rows="2"
+        class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none text-sm leading-relaxed"></textarea>
+    </section>
+
+    <!-- Chat Area -->
+    <main class="flex-1 flex flex-col min-h-0 bg-white">
+
+      <!-- Messages -->
+      <div id="chat-box" class="flex-1 overflow-y-auto px-4 py-6 sm:px-6 space-y-6 bg-white">
+        <!-- Messages will be injected here -->
+      </div>
+
+      <!-- Message Input -->
+      <div class="border-t border-gray-200 bg-gray-100 px-4 py-3 sm:px-6 flex gap-3">
+        <input id="message-input" type="text" placeholder="Type your message to the AI..."
+          class="flex-1 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
+        <button onclick="sendMessage()"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-lg shadow-md transition-all focus:ring-2 focus:ring-blue-500">
+          Send
+        </button>
+      </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-indicator" class="fixed inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10 hidden">
+      <div class="flex items-center space-x-3 text-blue-600 text-sm">
+        <div class="w-3 h-3 bg-blue-600 rounded-full animate-pulse"></div>
+        <span>AI is typing...</span>
+      </div>
     </div>
 
-    <main id="chat-box" class="chat-box"></main>
-
-    <div id="loading-indicator" class="loading-indicator" style="display: none;">
-      <div class="dot-flashing"></div>
-      <span>AI is typing...</span>
-    </div>
-
-    <footer class="chat-input">
-      <input type="text" id="user-input" placeholder="Feel free to ask anything – I'm here to help!" autocomplete="off">
-      <button onclick="sendMessage()">Send</button>
-    </footer>
   </div>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     const chatBox = document.getElementById('chat-box');
-    const inputField = document.getElementById('user-input');
-    const jobDescriptionField = document.getElementById('job-description');
-    const loading = document.getElementById('loading-indicator');
+    const jobInput = document.getElementById('job-description');
+    const messageInput = document.getElementById('message-input');
+    const loadingIndicator = document.getElementById('loading-indicator');
     const resumeData = localStorage.getItem('resumeData');
     let chatHistory = [];
 
     async function sendMessage() {
-      const message = inputField.value.trim();
-      const jobDescription = jobDescriptionField.value.trim();
+      const message = messageInput.value.trim();
+      const jobDesc = jobInput.value.trim();
       if (!message) return;
 
       appendMessage('You', message, 'user');
       chatHistory.push({ role: 'user', content: message });
-      inputField.value = '';
-      loading.style.display = 'flex';
+      messageInput.value = '';
+      loadingIndicator.classList.remove('hidden');
 
       const response = await fetch('/chat', {
         method: 'POST',
@@ -54,40 +83,94 @@
         body: JSON.stringify({
           messages: chatHistory,
           resume_data: resumeData,
-          job_description: jobDescription || null
+          job_description: jobDesc || null
         })
       });
 
       const data = await response.json();
-      loading.style.display = 'none';
+      loadingIndicator.classList.add('hidden');
       appendMessage('AI', data.reply, 'ai');
       chatHistory.push({ role: 'assistant', content: data.reply });
     }
 
-    function appendMessage(sender, message, cls) {
-      const msg = document.createElement('div');
-      msg.className = `message ${cls}`;
-      msg.innerHTML = `
-        <div class="msg-header">
-          <div class="avatar ${cls}"></div>
-          <strong>${sender}</strong>
-          ${cls === 'ai' ? `<button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>` : ''}
-        </div>
-        <div class="msg-body">${cls === 'ai' ? marked.parse(message) : message}</div>
-      `;
-      chatBox.appendChild(msg);
-      chatBox.scrollTop = chatBox.scrollHeight;
+function appendMessage(sender, message, cls) {
+  const isAI = cls === 'ai';
+
+  // Create wrapper div
+  const msgWrapper = document.createElement('div');
+  msgWrapper.className = `flex ${isAI ? 'justify-start' : 'justify-end'} w-full`;
+
+  // Create avatar
+  const avatar = document.createElement('div');
+  avatar.className = `w-10 h-10 rounded-full ${isAI ? 'bg-indigo-500' : 'bg-blue-600'} flex items-center justify-center text-white font-bold`;
+  avatar.textContent = isAI ? 'AI' : 'U';
+
+  // Create bubble container
+  const bubble = document.createElement('div');
+  bubble.className = `${isAI ? 'bg-indigo-100' : 'bg-gray-200'} p-4 rounded-2xl shadow text-sm text-gray-800 max-w-[75%] prose prose-sm`;
+
+  // Add sender name
+  const senderEl = document.createElement('div');
+  senderEl.className = 'font-semibold mb-1';
+  senderEl.textContent = sender;
+
+  // Add message content
+  const contentEl = document.createElement('div');
+  contentEl.innerHTML = isAI ? marked.parse(message) : escapeHtml(message);
+
+  // Optional copy button
+  let copyBtn = null;
+  if (isAI) {
+    copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Copy';
+    copyBtn.className = 'mt-2 text-indigo-600 text-xs hover:underline';
+    copyBtn.onclick = function () {
+      navigator.clipboard.writeText(contentEl.innerText).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => (copyBtn.textContent = 'Copy'), 1500);
+      });
+    };
+  }
+
+  // Assemble bubble
+  bubble.appendChild(senderEl);
+  bubble.appendChild(contentEl);
+  if (copyBtn) bubble.appendChild(copyBtn);
+
+  // Final layout: avatar and bubble
+  const innerFlex = document.createElement('div');
+  innerFlex.className = `flex items-start space-x-3`;
+
+  if (isAI) {
+    innerFlex.appendChild(avatar);
+    innerFlex.appendChild(bubble);
+  } else {
+    innerFlex.appendChild(bubble);
+    innerFlex.appendChild(avatar);
+  }
+
+  msgWrapper.appendChild(innerFlex);
+  chatBox.appendChild(msgWrapper);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.innerText = text;
+      return div.innerHTML;
     }
 
     function copyToClipboard(btn) {
-      const content = btn.parentElement.nextElementSibling.innerText;
+      const content = btn.previousElementSibling.innerText;
       navigator.clipboard.writeText(content).then(() => {
         btn.innerText = "Copied!";
-        setTimeout(() => (btn.innerText = "Copy"), 1500);
+        setTimeout(() => { btn.innerText = "Copy"; }, 1500);
       });
     }
 
-    inputField.addEventListener("keydown", function (e) {
+    // Press Enter to send
+    messageInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         sendMessage();

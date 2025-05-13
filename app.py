@@ -19,7 +19,7 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 
-TOGETHER_API_KEY = 'ab87d52c4444d33fdd260271f2a61920828f63a2315d906b893a202ce1bd5a2e'  # Replace with your actual key
+TOGETHER_API_KEY = os.getenv('TKEY') # Replace with your actual key
 client = Together(api_key=TOGETHER_API_KEY)
 
 # Extract text from PDF or DOCX
